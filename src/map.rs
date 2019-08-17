@@ -1,11 +1,17 @@
 use tcod::Color;
 use crate::tile::Tile;
 use std::cmp;
+use std::vec;
+use rand::Rng;
 
 pub type Map = Vec<Vec<Tile>>;
 
 pub const MAP_WIDTH : i32 = 80;
 pub const MAP_HEIGHT : i32 = 50;
+
+pub const MAX_ROOM_SIZE : i32 = 12;
+pub const MIN_ROOM_SIZE : i32 = 5;
+pub const MAX_ROOMS : i32 = 50;
 
 pub const COLOR_DARK_WALL: Color = Color { r: 0, g: 0, b: 100 };
 pub const COLOR_DARK_GROUND: Color = Color { r: 90, g: 90, b: 90 };
@@ -72,10 +78,44 @@ pub fn make_map() -> Map {
     // fill map with "unblocked" tiles
     let mut map = vec![vec![Tile::wall(); MAP_HEIGHT as usize]; MAP_WIDTH as usize];
 
-    let room1 = Rect::new(20, 15, 10, 15);
-    let room2 = Rect::new(50, 15, 10, 15);
-    create_room(room1, &mut map);
-    create_room(room2, &mut map);
-    create_h_tunnel(25, 50, 20, &mut map);
+    let mut rooms = Vec::<Rect>::new();
+    
+    //Loop through max rooms
+    for _ in 0..MAX_ROOMS {
+        let w = rand::thread_rng().gen_range(MIN_ROOM_SIZE, MAX_ROOM_SIZE + 1);
+        let h = rand::thread_rng().gen_range(MIN_ROOM_SIZE, MAX_ROOM_SIZE + 1);
+
+        let x = rand::thread_rng().gen_range(0, MAP_WIDTH);
+        let y = rand::thread_rng().gen_range(0, MAP_HEIGHT);
+        
+        //Make room to test
+        let room = Rect::new(x, y, w, h);
+        let mut fail = false;
+        //Loop through other rooms
+        for other in &rooms {
+            //Did it intersect with another room?
+            if room.intersects_with(other) {
+                fail = true;
+            }
+        }
+        //Did it fail by intersecting?
+        if !fail {
+
+            //is it within the bounds of the map?
+            if room.x1 >= 0
+                && room.x2 <= MAP_WIDTH
+                && room.y1 >= 0
+                && room.y2 <= MAP_HEIGHT {
+                    //if all checks out push
+                    rooms.push(room);
+            }
+        }
+    }
+
+    //Now loop through all our rooms
+    for room in &rooms {
+        create_room(*room, &mut map);
+    }
+
     map
 }
