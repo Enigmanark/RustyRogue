@@ -24,7 +24,7 @@ fn main() {
     let mut con = tcod::OffscreenConsole::new(map::MAP_WIDTH, map::MAP_HEIGHT);
 
     //Make player
-    let mut player = Object::new(map::MAP_WIDTH / 2, map::MAP_HEIGHT / 2, '@', colors::WHITE);
+    let mut player = Object::new(25, 23, '@', colors::WHITE);
     
     //Make npcs
     let npc1 = Object::new(map::MAP_WIDTH / 2 + 5, map::MAP_HEIGHT / 2 + 1, '@', colors::YELLOW);
@@ -35,10 +35,6 @@ fn main() {
 
     //make map
     let mut map = map::make_map();
-
-    //make some pillars
-    map[30][22] = tile::Tile::wall();
-    map[50][22] = tile::Tile::wall();
     
     //Main loop
     while !root.window_closed() {
@@ -65,6 +61,9 @@ fn render_all(root : &mut Root, con : &mut OffscreenConsole, player : &mut Objec
             let wall = map[x as usize][y as usize].block_sight;
             if wall {
                 con.set_char_background(x, y, map::COLOR_DARK_WALL, BackgroundFlag::Set);
+            }
+            else {
+                con.set_char_background(x, y, map::COLOR_DARK_GROUND, BackgroundFlag::Set);
             }
         }
     }
