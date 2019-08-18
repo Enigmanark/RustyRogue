@@ -23,19 +23,19 @@ fn main() {
     //Make offscreen canvas
     let mut con = tcod::OffscreenConsole::new(map::MAP_WIDTH, map::MAP_HEIGHT);
 
-    //Make player
-    let mut player = Object::new(25, 23, '@', colors::WHITE);
-    
-    //Make npcs
-    let npc1 = Object::new(map::MAP_WIDTH / 2 + 5, map::MAP_HEIGHT / 2 + 1, '@', colors::YELLOW);
-    let npc2 = Object::new(map::MAP_WIDTH / 2 + 2, map::MAP_HEIGHT / 2 + 2, '@', colors::YELLOW);
-
-    //put npcs into array
-    let objects = [npc1, npc2];
-
     //make map
-    let mut map = map::make_map();
+    let (map, (player_x, player_y)) = map::make_map();
+    let mut map = map;
     
+    // make player
+    let mut player = Object::new(player_x, player_y, '@', colors::WHITE);
+
+    //make npcs
+    let npc1 = Object::new(32, 32, '@', colors::YELLOW);
+    
+    //place npcs into array
+    let objects = [npc1];
+
     //Main loop
     while !root.window_closed() {
 

@@ -74,7 +74,7 @@ fn create_v_tunnel(y1: i32, y2: i32, x: i32, map: &mut Map) {
     }
 }
 
-pub fn make_map() -> Map {
+pub fn make_map() -> (Map, (i32, i32)) {
     // fill map with "unblocked" tiles
     let mut map = vec![vec![Tile::wall(); MAP_HEIGHT as usize]; MAP_WIDTH as usize];
 
@@ -112,10 +112,17 @@ pub fn make_map() -> Map {
         }
     }
 
+    let mut first = true;
+    let mut start_position = (0, 0);
     //Now loop through all our rooms
     for room in &rooms {
         create_room(*room, &mut map);
+        if first {
+            let (cx, cy) = room.get_center();
+            first = false;
+            start_position = (cx, cy);    
+        }
     }
 
-    map
+    (map, start_position)
 }
