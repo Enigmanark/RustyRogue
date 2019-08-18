@@ -85,8 +85,8 @@ pub fn make_map() -> Map {
         let w = rand::thread_rng().gen_range(MIN_ROOM_SIZE, MAX_ROOM_SIZE + 1);
         let h = rand::thread_rng().gen_range(MIN_ROOM_SIZE, MAX_ROOM_SIZE + 1);
 
-        let x = rand::thread_rng().gen_range(0, MAP_WIDTH);
-        let y = rand::thread_rng().gen_range(0, MAP_HEIGHT);
+        let x = rand::thread_rng().gen_range(0, MAP_WIDTH + 1);
+        let y = rand::thread_rng().gen_range(0, MAP_HEIGHT + 1);
         
         //Make room to test
         let room = Rect::new(x, y, w, h);
@@ -103,9 +103,9 @@ pub fn make_map() -> Map {
 
             //is it within the bounds of the map?
             if room.x1 >= 0
-                && room.x2 <= MAP_WIDTH
+                && room.x2 <= (MAP_WIDTH -1)
                 && room.y1 >= 0
-                && room.y2 <= MAP_HEIGHT {
+                && room.y2 <= (MAP_HEIGHT - 1) {
                     //if all checks out push
                     rooms.push(room);
             }
