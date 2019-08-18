@@ -25,7 +25,6 @@ fn main() {
 
     //make map
     let (map, (player_x, player_y)) = map::make_map();
-    let mut map = map;
     
     // make player
     let mut player = Object::new(player_x, player_y, '@', colors::WHITE);

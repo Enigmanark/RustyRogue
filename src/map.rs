@@ -34,10 +34,14 @@ impl Rect {
         }
     }
 
-    pub fn get_center(&self) -> (i32, i32) {
+    pub fn get_center_x(&self) -> i32 {
         let center_x = (self.x1 + self.x2) / 2;
+        center_x
+    }
+
+    pub fn get_center_y(&self) -> i32 {
         let center_y = (self.y1 + self.y2) / 2;
-        (center_x, center_y)
+        center_y
     }
 
     pub fn intersects_with(&self, other : &Rect) -> bool {
@@ -114,14 +118,36 @@ pub fn make_map() -> (Map, (i32, i32)) {
 
     let mut first = true;
     let mut start_position = (0, 0);
+    let mut prev_x = 0;
+    let mut prev_y = 0;
     //Now loop through all our rooms
     for room in &rooms {
         create_room(*room, &mut map);
         if first {
-            let (cx, cy) = room.get_center();
+            let cx = room.get_center_x();
+            let cy = room.get_center_y();
+            prev_x = cx;
+            prev_y = cy;
             first = false;
             start_position = (cx, cy);    
+        } 
+        //carve tunnels
+        else {
+            let new_x = room.get_center_x();
+            let new_y = room.get_center_y();
+            //carve hor then vert?
+            if rand::random() {
+                create_h_tunnel(prev_x, new_x, prev_y, &mut map);
+                create_v_tunnel(prev_y, new_y, prev_x, &mut map);
+            } 
+            //carve vert then hor?
+            else {
+                create_v_tunnel(prev_y, new_y, prev_x, &mut map);
+                create_h_tunnel(prev_x, new_x, prev_y, &mut map);
+            }
         }
+        prev_x = room.get_center_x();
+        prev_y = room.get_center_y();
     }
 
     (map, start_position)
