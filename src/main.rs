@@ -8,6 +8,7 @@ use object::Object;
 mod map;
 use map::Map;
 mod tile;
+mod fov;
 
 //main method
 fn main() {
